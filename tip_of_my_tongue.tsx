@@ -848,6 +848,31 @@ export default function App() {
   const [aiBaseInput, setAiBaseInput] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('ai_base_url') || '' : ''));
   const [aiModelInput, setAiModelInput] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('ai_model') || '' : ''));
 
+  // 检查 URL 中是否有自定义 key 参数进行自动绑定
+  useEffect(() => {
+    try {
+      const hash = window.location.hash;
+      const search = window.location.search;
+      let paramKey = '';
+      if (hash.includes('key=')) {
+        paramKey = hash.split('key=')[1]?.split('&')[0];
+      } else if (search.includes('key=')) {
+        const urlParams = new URLSearchParams(search);
+        paramKey = urlParams.get('key') || '';
+      }
+      if (paramKey && (paramKey.startsWith('sk-') || paramKey.startsWith('AIza'))) {
+        localStorage.setItem('ai_api_key', paramKey);
+        localStorage.setItem('ai_provider', paramKey.startsWith('AIza') ? 'gemini' : 'deepseek');
+        setAiKeyInput(paramKey);
+        setAiProvider(paramKey.startsWith('AIza') ? 'gemini' : 'deepseek');
+        triggerToast('🎉 已自动激活 AI 检索配置！');
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    } catch (e) {
+      console.error('URL key detection error', e);
+    }
+  }, []);
+
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveSettings = () => {
