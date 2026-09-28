@@ -940,19 +940,19 @@ export default function App() {
       <Toast message={toastMsg} show={showToast} onClose={() => setShowToast(false)} />
 
       {/* 顶部优雅导航栏 - 原汁原味实验室纯粹极简设计 */}
-      <header className="sticky top-0 z-40 backdrop-blur-md bg-stone-50/85 border-b border-stone-200/80 transition-all">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 backdrop-blur-md bg-stone-50/90 border-b border-stone-200/80 transition-all">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
           <div 
             onClick={() => { setActiveTab('search'); setCurrentResult(null); }}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform shrink-0">
               <Brain className="w-5 h-5 text-white" />
             </div>
-            <div>
+            <div className="shrink-0">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-lg text-stone-900 tracking-tight">话到嘴边</span>
-                <span className="text-xs bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full border border-amber-200/60">
+                <span className="font-bold text-base sm:text-lg text-stone-900 tracking-tight whitespace-nowrap">话到嘴边</span>
+                <span className="text-[11px] bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full border border-amber-200/60 hidden sm:inline-flex whitespace-nowrap">
                   Tip of My Tongue
                 </span>
               </div>
@@ -960,11 +960,11 @@ export default function App() {
             </div>
           </div>
 
-          {/* 导航标签组 */}
-          <nav className="flex items-center gap-1 sm:gap-2">
+          {/* 桌面端导航标签组 (手机端自动下沉到底部导航栏) */}
+          <nav className="hidden md:flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={() => setActiveTab('search')}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 activeTab === 'search'
                   ? 'bg-stone-900 text-white shadow-sm'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
@@ -976,7 +976,7 @@ export default function App() {
 
             <button
               onClick={() => setActiveTab('discovery')}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 activeTab === 'discovery'
                   ? 'bg-stone-900 text-white shadow-sm'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
@@ -991,27 +991,26 @@ export default function App() {
                 setActiveTab('mystery');
                 if (!mysteryCard) drawMysteryCard();
               }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                 activeTab === 'mystery'
                   ? 'bg-stone-900 text-white shadow-sm'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
               <Dice5 className="w-4 h-4 text-amber-500" />
-              <span className="hidden sm:inline">记忆盲盒</span>
-              <span className="sm:hidden">盲盒</span>
+              <span>记忆盲盒</span>
             </button>
 
             <button
               onClick={() => setActiveTab('saved')}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors relative ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-colors relative whitespace-nowrap ${
                 activeTab === 'saved'
                   ? 'bg-stone-900 text-white shadow-sm'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
               <Bookmark className="w-4 h-4 text-amber-500" />
-              <span className="hidden sm:inline">我的收藏</span>
+              <span>我的收藏</span>
               {bookmarks.length > 0 && (
                 <span className="bg-amber-400 text-stone-950 font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                   {bookmarks.length}
@@ -1023,20 +1022,20 @@ export default function App() {
       </header>
 
       {/* 主体交互区域 */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 pb-28 md:pb-12">
         {/* VIEW 1: SEARCH & RESULTS */}
         {activeTab === 'search' && (
-          <div className="space-y-8 animate-in fade-in duration-300">
+          <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
             {/* Hero 标语区 */}
-            <div className="text-center max-w-2xl mx-auto space-y-3">
+            <div className="text-center max-w-2xl mx-auto space-y-2 sm:space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-medium">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 <span>基于 Gemini 智能语义网络进行反向特征推导</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-stone-900 tracking-tight leading-tight">
                 叫什么来着？帮你找回想不起的名字
               </h1>
-              <p className="text-sm sm:text-base text-stone-500 leading-relaxed">
+              <p className="text-xs sm:text-base text-stone-500 leading-relaxed px-2">
                 输入那些只留在你印象里的口语化细节、外形、感觉或剧情，我们帮你找出它的学术正名。
               </p>
             </div>
@@ -1618,10 +1617,63 @@ export default function App() {
       </main>
 
       {/* 页脚 */}
-      <footer className="border-t border-stone-200 bg-white py-6 mt-12 text-center text-xs text-stone-400 space-y-1">
+      <footer className="border-t border-stone-200 bg-white py-6 mt-12 mb-16 md:mb-0 text-center text-xs text-stone-400 space-y-1">
         <p>话到嘴边 (Tip of My Tongue) · 解决人类词穷与遗忘焦虑的世界概念反向词典</p>
         <p className="text-[11px] text-stone-400">持续更新日常冷门物件、心理学现象、高级成语与科学百科</p>
       </footer>
+
+      {/* 移动端专属优雅底部导航栏 (手机端 App 级质感) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-stone-50/95 backdrop-blur-md border-t border-stone-200/90 px-2 py-1.5 flex items-center justify-around shadow-lg">
+        <button
+          onClick={() => setActiveTab('search')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-colors ${
+            activeTab === 'search' ? 'text-amber-700 font-bold' : 'text-stone-500 hover:text-stone-800'
+          }`}
+        >
+          <Search className="w-5 h-5" />
+          <span className="text-[11px] whitespace-nowrap">智能寻词</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('discovery')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-colors ${
+            activeTab === 'discovery' ? 'text-amber-700 font-bold' : 'text-stone-500 hover:text-stone-800'
+          }`}
+        >
+          <Compass className="w-5 h-5" />
+          <span className="text-[11px] whitespace-nowrap">灵感发现</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('mystery');
+            if (!mysteryCard) drawMysteryCard();
+          }}
+          className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-colors ${
+            activeTab === 'mystery' ? 'text-amber-700 font-bold' : 'text-stone-500 hover:text-stone-800'
+          }`}
+        >
+          <Dice5 className="w-5 h-5 text-amber-500" />
+          <span className="text-[11px] whitespace-nowrap">记忆盲盒</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('saved')}
+          className={`flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-colors relative ${
+            activeTab === 'saved' ? 'text-amber-700 font-bold' : 'text-stone-500 hover:text-stone-800'
+          }`}
+        >
+          <div className="relative">
+            <Bookmark className="w-5 h-5 text-amber-500" />
+            {bookmarks.length > 0 && (
+              <span className="absolute -top-1.5 -right-2.5 bg-amber-400 text-stone-950 font-bold text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                {bookmarks.length}
+              </span>
+            )}
+          </div>
+          <span className="text-[11px] whitespace-nowrap">我的收藏</span>
+        </button>
+      </nav>
     </div>
   );
 }
