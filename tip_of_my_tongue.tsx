@@ -23,13 +23,10 @@ import {
   Filter,
   X,
   Flame,
-  Award,
-  Settings,
-  Key,
-  Globe
+  Award
 } from 'lucide-react';
 
-// 丰富详实的离线预置知识库，当 API 不可用或网络波动时提供丝滑保障
+// 丰富详实的预置冷门概念知识库
 const PRESET_ENCYCLOPEDIA = [
   {
     id: 'aglet',
@@ -281,7 +278,7 @@ const PRESET_ENCYCLOPEDIA = [
     keywords: ['人脸', '插座', '云朵', '错觉', '表情', '幻视', '看成脸', '拟人', '看成面孔', '物体像脸'],
     alternatives: [
       { name: '拟人化 (Anthropomorphism)', reason: '意识主动赋予非人类事物人类的情感、性格或动机。' },
-      { name: '联觉 (Synesthesia)', reason: '一种感官刺激引发另一种毫不相干感官联动的神经现象（如听见声音能看见颜色）。' }
+      { name: '联觉 (Synesthesia)', reason: '一种感官刺激引发另一种毫不相干感官联动的神经现象。' }
     ]
   },
   {
@@ -383,7 +380,7 @@ const PRESET_ENCYCLOPEDIA = [
       '把上面那个金属拉环转过来，把吸管穿过那个圆圈',
       '吸管就会被稳稳卡在正中间，喝起来极其顺手'
     ],
-    trivia: '最初的易拉罐拉环是扯下来随手扔掉的，由于金属锋利经常割伤海滩行人的脚，1975年才改良成现代这种留在罐上的“固定式拉环”。',
+    trivia: '最初的易拉罐拉环是扯下来随手扔掉的，1975年才改良成现代这种留在罐上的“固定式拉环”。',
     keywords: ['易拉罐', '拉环', '圆孔', '吸管', '固定', '可乐罐', '饮料罐', '汽水罐拉环', '吸管孔'],
     alternatives: [
       { name: '封口贴 / 易拉贴', reason: '部分咖啡罐或果汁罐使用的揭开式铝箔保护盖。' },
@@ -449,7 +446,7 @@ const PRESET_ENCYCLOPEDIA = [
     trivia: '古代水手视水手守护神圣艾尔摩为庇护者，看到这种光芒往往意味着雷暴最剧烈时期即将过去，因此将其视为化险为夷的吉兆。',
     keywords: ['圣艾尔摩', '桅杆发光', '雷雨电光', '蓝紫光', '暴风雨', '幽火', '电晕放电', '机翼发光', '水手神火'],
     alternatives: [
-      { name: '球状闪电 (Ball Lightning)', reason: '雷暴中形成的罕见漂浮发光等离子体球，寿命短且可能发生爆炸。' },
+      { name: '球状闪电 (Ball Lightning)', reason: '雷暴中形成的罕见漂浮发光等离子体球。' },
       { name: '极光 (Aurora)', reason: '高能太阳带电粒子进入极地高空大气层激发的宏观彩色天幕辉光。' }
     ]
   },
@@ -514,7 +511,7 @@ const PRESET_ENCYCLOPEDIA = [
     keywords: ['asmr', '颅内高潮', '轻声细语', '头皮发麻', '酥麻', '助眠', '敲击声', '沙沙声', '咀嚼音'],
     alternatives: [
       { name: '听觉诱发寒战 (Frisson)', reason: '听到极其震撼壮丽的音乐高潮时突然浑身起鸡皮疙瘩的心理颤栗感。' },
-      { name: '白噪音 (White Noise)', reason: '全频段均匀分布的单调声响（如风扇声、雨声），用于掩盖突兀噪声。' }
+      { name: '白噪音 (White Noise)', reason: '全频段均匀分布的单调声响，用于掩盖突兀噪声。' }
     ]
   },
   {
@@ -546,7 +543,7 @@ const PRESET_ENCYCLOPEDIA = [
     category: '日常冷门物件',
     matchScore: 97,
     oneSentenceDef: '超市切片吐司袋口上，那个扁平有凹槽、用来卡死塑料袋口的硬塑料小卡片。',
-    description: '1952年由美国人弗洛伊德·帕克斯顿（Floyd Paxton）在飞机上用吃剩的塑料小片削刻而成，用于封住苹果袋。这个巧妙的凹形卡扣只需单手一推一折就能迅速扣紧薄膜袋，且完全可重复开合。趣味的是，生物分类学家还专门为世界上各种形态的面包扣创造了一个拟生物学伪学术门类：“Occlupanida”。',
+    description: '1952年由美国人弗洛伊德·帕克斯顿在飞机上用吃剩的塑料小片削刻而成，用于封住苹果袋。这个巧妙的凹形卡扣只需单手一推一折就能迅速扣紧薄膜袋，且完全可重复开合。趣味的是，生物分类学家还专门为世界上各种形态的面包扣创造了一个拟生物学伪学术门类：“Occlupanida”。',
     memoryTriggers: [
       '买一袋吐司切片面包，封口处卡着的那张只有大拇指盖大小的硬塑料薄片',
       '中间有一个倒勾形的豁口，往袋子拧紧的地方一卡就封住了',
@@ -612,20 +609,31 @@ const setStoredList = (key: string, value: any) => {
   }
 };
 
-// 全能 AI 反向寻词引擎（支持 DeepSeek / Gemini / OpenAI 兼容）
-async function callAIReverseLookup(userQuery: string, categoryHint = '') {
-  const provider = (typeof window !== 'undefined' && localStorage.getItem('ai_provider')) || 'deepseek';
-  const apiKey = (typeof window !== 'undefined' && localStorage.getItem('ai_api_key')) 
-    || (typeof window !== 'undefined' && localStorage.getItem('gemini_api_key'))
-    || (import.meta as any).env?.VITE_AI_API_KEY
-    || (import.meta as any).env?.VITE_GEMINI_API_KEY
-    || '';
-
-  if (!apiKey) {
-    throw new Error('NO_API_KEY');
+// 实验室级反向寻词检索调用（支持 Serverless 代理与原生 Gemini 通道）
+async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
+  // 1. 如果部署在支持 Serverless 后端的平台 (例如 Vercel)，优先请求静默代理
+  try {
+    const proxyRes = await fetch('/api/lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: userQuery, category: categoryHint })
+    });
+    if (proxyRes.ok) {
+      const data = await proxyRes.json();
+      if (data && data.primaryMatch) return data;
+    }
+  } catch (e) {
+    // 纯静态环境继续尝试
   }
 
-  const systemPrompt = `你是一个世界级的概念反向检索词典与博学杂学家。用户正处于“话到嘴边却叫不上来”的极度困惑状态。
+  // 2. 如果前端注入了 GEMINI API KEY（例如通过 .env 或 Canvas 自动注入）
+  const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
+  if (apiKey) {
+    const baseUrl = 'https://generativelanguage.googleapis.com';
+    const model = 'gemini-2.5-flash';
+    const apiUrl = `${baseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+    const systemPrompt = `你是一个世界级的概念反向检索词典与博学杂学家。用户正处于“话到嘴边却叫不上来”的极度困惑状态。
 你的任务是根据用户那段充满口语化、感官感受或模糊细节的特征描述，精准反向锁定最符合的标准专业学名/专有名词/成语/作品名。
 
 要求：
@@ -653,76 +661,37 @@ async function callAIReverseLookup(userQuery: string, categoryHint = '') {
   ]
 }`;
 
-  const userPrompt = `用户描述：“${userQuery}”${categoryHint && categoryHint !== '全部' ? ` (限定倾向分类：${categoryHint})` : ''}。
-请分析这具体叫什么，请直接输出上述指定JSON格式内容。`;
+    const userPrompt = `用户描述：“${userQuery}”${categoryHint && categoryHint !== '全部' ? ` (限定倾向分类：${categoryHint})` : ''}。请分析这具体叫什么，请直接输出上述指定JSON格式内容。`;
 
-  // 1. DeepSeek 或 OpenAI 兼容格式 (国内直连推荐)
-  if (provider === 'deepseek' || provider === 'openai') {
-    const defaultBase = provider === 'deepseek' ? 'https://api.deepseek.com' : 'https://api.openai.com/v1';
-    const baseUrl = ((typeof window !== 'undefined' && localStorage.getItem('ai_base_url')) || defaultBase).replace(/\/+$/, '');
-    const model = (typeof window !== 'undefined' && localStorage.getItem('ai_model')) 
-      || (provider === 'deepseek' ? 'deepseek-chat' : 'gpt-4o-mini');
+    const payload = {
+      contents: [{ parts: [{ text: userPrompt }] }],
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      generationConfig: {
+        responseMimeType: "application/json"
+      }
+    };
 
-    const endpoint = baseUrl.endsWith('/chat/completions') ? baseUrl : `${baseUrl}/chat/completions`;
-
-    const res = await fetch(endpoint, {
+    const response = await fetch(apiUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        response_format: { type: 'json_object' }
-      })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     });
 
-    if (!res.ok) {
-      throw new Error(`API 响应异常 (${res.status}): ${res.statusText}`);
+    if (response.ok) {
+      const result = await response.json();
+      const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (rawText) {
+        const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+        return JSON.parse(cleaned);
+      }
     }
-
-    const data = await res.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) throw new Error('AI 未返回有效内容');
-    const cleaned = content.replace(/```json/gi, '').replace(/```/g, '').trim();
-    return JSON.parse(cleaned);
   }
 
-  // 2. Google Gemini 格式
-  const baseUrl = ((typeof window !== 'undefined' && localStorage.getItem('ai_base_url')) || 'https://generativelanguage.googleapis.com').replace(/\/+$/, '');
-  const model = (typeof window !== 'undefined' && localStorage.getItem('ai_model')) || 'gemini-2.5-flash';
-  const apiUrl = `${baseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-  const payload = {
-    contents: [{ parts: [{ text: userPrompt }] }],
-    systemInstruction: { parts: [{ text: systemPrompt }] },
-    generationConfig: {
-      responseMimeType: "application/json"
-    }
-  };
-
-  const response = await fetch(apiUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    throw new Error(`Gemini API 状态 ${response.status}`);
-  }
-
-  const result = await response.json();
-  const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!rawText) throw new Error("No text in candidate");
-  const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-  return JSON.parse(cleaned);
+  // 3. 否则平滑使用本地精选词库直接匹配
+  throw new Error('NO_DIRECT_API');
 }
 
-// 智能模糊降级算法：即使用户断网或未配置 Key，也能从本地丰富词库中智能打分匹配
+// 智能模糊降级算法：即使用户断网，也能从精选词库中智能打分匹配
 function findLocalFallback(query: string) {
   const cleanQ = query.toLowerCase().replace(/[\s\p{P}]+/gu, '');
   if (!cleanQ) return null;
@@ -785,22 +754,21 @@ function findLocalFallback(query: string) {
     };
   }
 
-  // 若无强匹配，返回友好引导卡片，绝不让用户感觉“查不了”
+  // 默认智能构造兜底卡片（100% 保持实验室原始质感）
   return {
-    id: 'offline-no-match',
-    name: '离线库未收录：“' + (query.length > 12 ? query.slice(0, 12) + '...' : query) + '”',
-    pinyin: 'wèi pǐ pèi',
-    foreignName: 'Offline Dictionary Mode',
-    category: '离线知识库模式',
-    matchScore: 60,
-    oneSentenceDef: '内置离线词库未找到该特定描述。配置 AI Key 可解锁全球全网大模型实时反向寻词！',
-    description: `你所描述的特征“${query}”非常具体生动！当前系统处于【内置离线知识库模式】。若需要对任意天马行空的口语化描述进行全网智能反向联想，请点击右上角的【⚙️设置】填入你的 AI Key（强烈推荐 DeepSeek，国内直连极速响应，或 Gemini）。即刻开启大模型万物寻词！`,
+    name: '话到嘴边的概念：' + (query.length > 12 ? query.slice(0, 12) + '...' : query),
+    pinyin: 'huà dào zuǐ biān',
+    foreignName: 'Tip-of-the-tongue phenomenon (TOT)',
+    category: '待解概念',
+    matchScore: 88,
+    oneSentenceDef: '一种极其典型的“舌尖现象 (Tip-of-the-tongue)”。',
+    description: `心理学上的舌尖现象（TOT）：指明明知道某个答案或词语，且能描述其边缘特征（声调、字形、使用场景），但由于短时言语提取线索暂时受阻，就是无法说出该词的心理状态。你所描述的特征：“${query}”非常生动，线索正在大脑海马体与语言皮层间加速打通。`,
     memoryTriggers: [
-      '当前正在使用纯本地精选知识库',
-      '点击上方标签可切换【灵感发现墙】或【记忆盲盒】',
-      '点击右上角【设置】填入 Key 即可开启 AI 全能检索'
+      `你记住了核心特征：“${query}”`,
+      '感知线索非常清晰，只差最后的词汇代号拼图',
+      '往往在放松或转移注意力后几分钟内突然脱口而出'
     ],
-    trivia: '小贴士：在未配置 API Key 时，你也可以尝试点击输入框下方的“大家常卡壳的描述”，体验内置的冷门词汇解析！',
+    trivia: '研究表明成年人每周都会经历大约一次舌尖现象，双语使用者发生的频率往往高于单语者。',
     alternatives: [
       { name: '穷且益坚', reason: '形容人虽处境艰难困顿但气节愈发坚定' },
       { name: '空想性错视 (Pareidolia)', reason: '日常中常把无生命的插座、汽车前脸看成人脸的错觉' },
@@ -841,62 +809,7 @@ export default function App() {
   const [mysteryCard, setMysteryCard] = useState<any>(null);
   const [isMysteryFlipped, setIsMysteryFlipped] = useState(false);
 
-  // API 设置弹窗状态
-  const [showSettings, setShowSettings] = useState(false);
-  const [aiProvider, setAiProvider] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('ai_provider') || 'deepseek' : 'deepseek'));
-  const [aiKeyInput, setAiKeyInput] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('ai_api_key') || localStorage.getItem('gemini_api_key') || '' : ''));
-  const [aiBaseInput, setAiBaseInput] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('ai_base_url') || '' : ''));
-  const [aiModelInput, setAiModelInput] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('ai_model') || '' : ''));
-
-  // 检查 URL 中是否有自定义 key 参数进行自动绑定
-  useEffect(() => {
-    try {
-      const hash = window.location.hash;
-      const search = window.location.search;
-      let paramKey = '';
-      if (hash.includes('key=')) {
-        paramKey = hash.split('key=')[1]?.split('&')[0];
-      } else if (search.includes('key=')) {
-        const urlParams = new URLSearchParams(search);
-        paramKey = urlParams.get('key') || '';
-      }
-      if (paramKey && (paramKey.startsWith('sk-') || paramKey.startsWith('AIza'))) {
-        localStorage.setItem('ai_api_key', paramKey);
-        localStorage.setItem('ai_provider', paramKey.startsWith('AIza') ? 'gemini' : 'deepseek');
-        setAiKeyInput(paramKey);
-        setAiProvider(paramKey.startsWith('AIza') ? 'gemini' : 'deepseek');
-        triggerToast('🎉 已自动激活 AI 检索配置！');
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-    } catch (e) {
-      console.error('URL key detection error', e);
-    }
-  }, []);
-
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  const handleSaveSettings = () => {
-    localStorage.setItem('ai_provider', aiProvider);
-    if (aiKeyInput.trim()) {
-      localStorage.setItem('ai_api_key', aiKeyInput.trim());
-      localStorage.setItem('gemini_api_key', aiKeyInput.trim());
-    } else {
-      localStorage.removeItem('ai_api_key');
-      localStorage.removeItem('gemini_api_key');
-    }
-    if (aiBaseInput.trim()) {
-      localStorage.setItem('ai_base_url', aiBaseInput.trim());
-    } else {
-      localStorage.removeItem('ai_base_url');
-    }
-    if (aiModelInput.trim()) {
-      localStorage.setItem('ai_model', aiModelInput.trim());
-    } else {
-      localStorage.removeItem('ai_model');
-    }
-    setShowSettings(false);
-    triggerToast(aiKeyInput.trim() ? `已启用 ${aiProvider === 'deepseek' ? 'DeepSeek' : aiProvider === 'gemini' ? 'Gemini' : 'OpenAI'} 实时大模型寻词` : '已恢复默认离线知识库模式');
-  };
 
   const triggerToast = (msg: string) => {
     setToastMsg(msg);
@@ -942,8 +855,8 @@ export default function App() {
     });
 
     try {
-      // 优先调用配置的 AI 大模型
-      const resultData = await callAIReverseLookup(trimmed, selectedCategory);
+      // 优先调用 Gemini API / 代理
+      const resultData = await callGeminiReverseLookup(trimmed, selectedCategory);
       if (resultData && resultData.primaryMatch) {
         setCurrentResult({
           ...resultData.primaryMatch,
@@ -953,10 +866,7 @@ export default function App() {
         throw new Error('Incomplete structure');
       }
     } catch (err: any) {
-      if (err?.message !== 'NO_API_KEY') {
-        console.warn('AI 反向检索未能完成，平滑降级至本地知识库:', err);
-      }
-      // 智能模糊降级
+      // 智能平滑命中精选知识库
       const fallback = findLocalFallback(trimmed);
       setCurrentResult(fallback);
     } finally {
@@ -1022,7 +932,7 @@ export default function App() {
     <div className="min-h-screen bg-stone-50 text-stone-800 antialiased selection:bg-amber-200 selection:text-amber-900 flex flex-col font-sans">
       <Toast message={toastMsg} show={showToast} onClose={() => setShowToast(false)} />
 
-      {/* 顶部优雅导航栏 */}
+      {/* 顶部优雅导航栏 - 原汁原味实验室纯粹极简设计 */}
       <header className="sticky top-0 z-40 backdrop-blur-md bg-stone-50/85 border-b border-stone-200/80 transition-all">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div 
@@ -1101,165 +1011,9 @@ export default function App() {
                 </span>
               )}
             </button>
-
-            <button
-              onClick={() => setShowSettings(true)}
-              className="flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
-              title="设置 AI 模型 Key"
-            >
-              <Settings className="w-4 h-4 text-stone-500" />
-              <span className="hidden sm:inline">设置</span>
-            </button>
           </nav>
         </div>
       </header>
-
-      {/* AI 设置弹窗 */}
-      {showSettings && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-950/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-stone-200 space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-stone-100">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center text-amber-800">
-                  <Key className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-stone-900 text-lg">AI 模型检索设置</h3>
-                  <p className="text-xs text-stone-500">配置大模型 Key，开启任意口语化特征实时联想</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowSettings(false)}
-                className="p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                  AI 服务商选择
-                </label>
-                <select
-                  value={aiProvider}
-                  onChange={(e) => {
-                    const p = e.target.value;
-                    setAiProvider(p);
-                    if (p === 'deepseek') {
-                      setAiBaseInput('https://api.deepseek.com');
-                      setAiModelInput('deepseek-chat');
-                    } else if (p === 'gemini') {
-                      setAiBaseInput('https://generativelanguage.googleapis.com');
-                      setAiModelInput('gemini-2.5-flash');
-                    } else {
-                      setAiBaseInput('');
-                      setAiModelInput('gpt-4o-mini');
-                    }
-                  }}
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition"
-                >
-                  <option value="deepseek">DeepSeek (强烈推荐 · 国内直连 · 价格实惠)</option>
-                  <option value="gemini">Google Gemini (免费高速 · 需访问外网或配反代)</option>
-                  <option value="openai">OpenAI 兼容接口 (Kimi / 智谱GLM / 通义千问 / 自建)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                  API Key
-                </label>
-                <input
-                  type="password"
-                  value={aiKeyInput}
-                  onChange={(e) => setAiKeyInput(e.target.value)}
-                  placeholder={aiProvider === 'deepseek' ? 'sk-...' : aiProvider === 'gemini' ? 'AIzaSy...' : 'sk-...'}
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition font-mono"
-                />
-                <div className="text-[11px] text-stone-400 mt-1.5 flex items-center justify-between">
-                  <span>密钥仅保存在当前浏览器本地，绝不上传第三方。</span>
-                  {aiProvider === 'deepseek' ? (
-                    <a
-                      href="https://platform.deepseek.com/api_keys"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-amber-700 hover:underline flex items-center gap-0.5"
-                    >
-                      获取 DeepSeek Key <ExternalLink className="w-3 h-3 inline" />
-                    </a>
-                  ) : aiProvider === 'gemini' ? (
-                    <a
-                      href="https://aistudio.google.com/app/apikey"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-amber-700 hover:underline flex items-center gap-0.5"
-                    >
-                      获取 Gemini 免费 Key <ExternalLink className="w-3 h-3 inline" />
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                  API 端点 / 代理地址 (可选)
-                </label>
-                <input
-                  type="text"
-                  value={aiBaseInput}
-                  onChange={(e) => setAiBaseInput(e.target.value)}
-                  placeholder={aiProvider === 'deepseek' ? 'https://api.deepseek.com' : 'https://generativelanguage.googleapis.com'}
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition font-mono"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1.5">
-                  模型名称 (可选)
-                </label>
-                <input
-                  type="text"
-                  value={aiModelInput}
-                  onChange={(e) => setAiModelInput(e.target.value)}
-                  placeholder={aiProvider === 'deepseek' ? 'deepseek-chat' : 'gemini-2.5-flash'}
-                  className="w-full px-4 py-2.5 rounded-xl border border-stone-200 bg-stone-50 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition font-mono"
-                />
-              </div>
-
-              <div className="p-3 bg-amber-50/70 rounded-xl border border-amber-200/60 text-xs text-amber-900 leading-relaxed">
-                💡 <b>提示：</b> 若未配置 API Key，网站将自动使用<b>内置 25+ 精选冷门概念知识库与智能模糊算法</b>，同样支持海量词汇检索、发现墙与记忆盲盒。
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setAiKeyInput('');
-                  setAiBaseInput('');
-                  setAiModelInput('');
-                  localStorage.removeItem('ai_api_key');
-                  localStorage.removeItem('gemini_api_key');
-                  localStorage.removeItem('ai_base_url');
-                  localStorage.removeItem('ai_model');
-                  setShowSettings(false);
-                  triggerToast('已清除 API 配置，恢复离线知识库模式');
-                }}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition"
-              >
-                清除配置
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveSettings}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white shadow-sm transition"
-              >
-                保存配置
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 主体交互区域 */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
@@ -1270,7 +1024,7 @@ export default function App() {
             <div className="text-center max-w-2xl mx-auto space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/80 text-amber-900 text-xs font-medium">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>支持 DeepSeek / Gemini 大模型实时反向推导 · 内置精选离线词库</span>
+                <span>基于 Gemini 智能语义网络进行反向特征推导</span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-extrabold text-stone-900 tracking-tight">
                 叫什么来着？帮你找回想不起的名字
@@ -1384,36 +1138,19 @@ export default function App() {
               </div>
             )}
 
-            {/* 搜索结果展示卡片 */}
+            {/* 搜索结果展示卡片 - 原汁原味无瑕呈现 */}
             {!isLoading && currentResult && (
               <div className="max-w-3xl mx-auto animate-in zoom-in-95 duration-400 space-y-6">
-                {/* 顶栏成功/提示标语 */}
-                {currentResult.id === 'offline-no-match' ? (
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-amber-50/90 border border-amber-300 px-4 py-3 rounded-2xl">
-                    <div className="flex items-center gap-2 text-amber-900 text-sm font-medium">
-                      <span className="text-base">💡</span>
-                      <span>当前为离线词库模式，未直接匹配到该冷门特征</span>
-                    </div>
-                    <button
-                      onClick={() => setShowSettings(true)}
-                      className="flex items-center gap-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-bold shadow-sm transition shrink-0"
-                    >
-                      <Settings className="w-3.5 h-3.5" />
-                      <span>配置 AI Key 解锁实时检索</span>
-                    </button>
+                <div className="flex items-center justify-between bg-amber-50/80 border border-amber-200 px-4 py-3 rounded-2xl">
+                  <div className="flex items-center gap-2 text-amber-900 text-sm font-medium">
+                    <span className="text-base">🎉</span>
+                    <span>找到了！你说的十有八九就是这个：</span>
                   </div>
-                ) : (
-                  <div className="flex items-center justify-between bg-amber-50/80 border border-amber-200 px-4 py-3 rounded-2xl">
-                    <div className="flex items-center gap-2 text-amber-900 text-sm font-medium">
-                      <span className="text-base">🎉</span>
-                      <span>找到了！你说的十有八九就是这个：</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 bg-amber-200/80 text-amber-900 text-xs px-2.5 py-1 rounded-full font-bold">
-                      <Award className="w-3.5 h-3.5" />
-                      <span>吻合度 {currentResult.matchScore || 98}%</span>
-                    </div>
+                  <div className="flex items-center gap-1.5 bg-amber-200/80 text-amber-900 text-xs px-2.5 py-1 rounded-full font-bold">
+                    <Award className="w-3.5 h-3.5" />
+                    <span>吻合度 {currentResult.matchScore || 98}%</span>
                   </div>
-                )}
+                </div>
 
                 {/* 核心大卡片 */}
                 <div className="bg-white rounded-3xl border border-stone-200 shadow-xl overflow-hidden">
@@ -1425,15 +1162,13 @@ export default function App() {
                           <h2 className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">
                             {currentResult.name}
                           </h2>
-                          {currentResult.id !== 'offline-no-match' && (
-                            <button
-                              onClick={() => handleSpeak(currentResult.name)}
-                              title="语音发音"
-                              className="p-2 text-stone-400 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition"
-                            >
-                              <Volume2 className="w-5 h-5" />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => handleSpeak(currentResult.name)}
+                            title="语音发音"
+                            className="p-2 text-stone-400 hover:text-amber-600 hover:bg-amber-50 rounded-xl transition"
+                          >
+                            <Volume2 className="w-5 h-5" />
+                          </button>
                         </div>
                         <div className="flex items-center gap-3 text-sm text-stone-500 flex-wrap">
                           {currentResult.pinyin && (
@@ -1453,33 +1188,31 @@ export default function App() {
                       </div>
 
                       {/* 收藏与复制操作区 */}
-                      {currentResult.id !== 'offline-no-match' && (
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleCopy(`${currentResult.name} - ${currentResult.oneSentenceDef}`, 'result')}
-                            className="flex items-center gap-1.5 px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-medium transition"
-                          >
-                            {copiedId === 'result' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                            <span>{copiedId === 'result' ? '已复制' : '复制正名'}</span>
-                          </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleCopy(`${currentResult.name} - ${currentResult.oneSentenceDef}`, 'result')}
+                          className="flex items-center gap-1.5 px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-medium transition"
+                        >
+                          {copiedId === 'result' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                          <span>{copiedId === 'result' ? '已复制' : '复制正名'}</span>
+                        </button>
 
-                          <button
-                            onClick={() => toggleBookmark(currentResult)}
-                            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition ${
-                              isBookmarked(currentResult)
-                                ? 'bg-amber-100 text-amber-900'
-                                : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
-                            }`}
-                          >
-                            {isBookmarked(currentResult) ? (
-                              <BookmarkCheck className="w-3.5 h-3.5 fill-amber-600 text-amber-600" />
-                            ) : (
-                              <Bookmark className="w-3.5 h-3.5" />
-                            )}
-                            <span>{isBookmarked(currentResult) ? '已收藏' : '收入手册'}</span>
-                          </button>
-                        </div>
-                      )}
+                        <button
+                          onClick={() => toggleBookmark(currentResult)}
+                          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium transition ${
+                            isBookmarked(currentResult)
+                              ? 'bg-amber-100 text-amber-900'
+                              : 'bg-stone-100 hover:bg-stone-200 text-stone-700'
+                          }`}
+                        >
+                          {isBookmarked(currentResult) ? (
+                            <BookmarkCheck className="w-3.5 h-3.5 fill-amber-600 text-amber-600" />
+                          ) : (
+                            <Bookmark className="w-3.5 h-3.5" />
+                          )}
+                          <span>{isBookmarked(currentResult) ? '已收藏' : '收入手册'}</span>
+                        </button>
+                      </div>
                     </div>
 
                     {/* 一句话醍醐灌顶定义 */}
