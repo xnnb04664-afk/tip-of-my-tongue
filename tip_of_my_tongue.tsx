@@ -555,6 +555,195 @@ const PRESET_ENCYCLOPEDIA = [
       { name: '魔术带 / 扎丝 (Twist Tie)', reason: '内部包裹细铁丝的纸胶带，多用于散装烘焙袋扭转扎紧。' },
       { name: '封口夹 (Sealing Clip)', reason: '用于夹住大零食袋的带铰链的长条塑料夹子。' }
     ]
+  },
+  {
+    id: 'phosphene',
+    name: '光幻视',
+    pinyin: 'guāng huàn shì',
+    foreignName: 'Phosphene (眼内压迫闪光 / 揉眼光斑)',
+    category: '心理与感官现象',
+    matchScore: 98,
+    oneSentenceDef: '闭着眼睛或用力揉眼皮时，眼前看到的一闪一闪的光斑或彩色几何图案。',
+    description: '在没有外界实际光线进入眼睛的情况下，视网膜受到机械压力（如手指揉压）等物理刺激，导致视网膜上的感光细胞与神经节细胞被机械性激活，向大脑视觉中枢发送错误神经电信号，使大脑误以为接收到了光线。',
+    memoryTriggers: [
+      '用手指用力揉眼眶揉太久',
+      '闭着眼睛时视野里突然出现彩色光斑、万花筒或者像波纹一样的闪光点',
+      '睁开眼后几秒钟慢慢散去'
+    ],
+    trivia: '宇航员在太空暴露于高能宇宙射线时，即使紧闭双眼睡觉，也会因为宇宙射线直接穿透视网膜而频繁看到光幻视闪光。',
+    keywords: ['揉眼', '揉眼睛', '闭眼', '冒金星', '发光', '闪光', '光斑', '眼睛亮', '闪亮', '一闪一闪的光'],
+    alternatives: [
+      { name: '闪辉暗点 (Scintillating Scotoma)', reason: '偏头痛先兆期出现的视野锯齿状盲区与闪光。' },
+      { name: '飞蚊症 (Floaters)', reason: '玻璃体浑浊在视网膜上投射出的固定漂浮阴影，并非自发光。' }
+    ]
+  },
+  {
+    id: 'lignin-odor',
+    name: '木质素降解气味',
+    pinyin: 'mù zhì sù jiàng jiě qì wèi',
+    foreignName: 'Lignin degradation odor (旧书香 / 纸张降解陈香)',
+    category: '自然与科学冷知识',
+    matchScore: 97,
+    oneSentenceDef: '翻动古旧书籍或泛黄纸张时，扑鼻而来那股令人安心的类似香草与杏仁的微甜清香。',
+    description: '传统造纸木浆中含有木质素。随着岁月流逝，纸张中的木质素在氧气、温度和微量酸催化下发生缓慢的化学降解，逐渐挥发出包括香兰素（带来香草奶香）、苯甲醛（带来杏仁香）和乙酸（微酸木香）在内的挥发性有机化合物。',
+    memoryTriggers: [
+      '走进老图书馆或二手书店翻开泛黄厚书',
+      '有一种混合了木头、淡淡香草甜味和阳光晒过的纸张气息',
+      '闻起来让人格外宁静专注'
+    ],
+    trivia: '图书馆学家和纸质文物修复专家通过分析书本散发的木质素挥发物种类与浓度，不需要取样破坏纸张就能精准推断这本古籍的老化程度和确切保存状况。',
+    keywords: ['旧书', '翻书', '书味', '书香', '书本味道', '老书', '纸张味道', '好闻的书', '图书馆味'],
+    alternatives: [
+      { name: '初雨泥土味 (Petrichor)', reason: '初雨降临干土时放线菌散发的潮土油清香。' },
+      { name: '霉味 (Musty odor)', reason: '受潮生霉产生的刺鼻土腥味，与健康纸张氧化的纯正旧书香截然不同。' }
+    ]
+  },
+  {
+    id: 'doorway-effect',
+    name: '门口效应',
+    pinyin: 'mén kǒu xiào yìng',
+    foreignName: 'The Doorway Effect (门槛效应 / 事件边界综合征)',
+    category: '心理与感官现象',
+    matchScore: 98,
+    oneSentenceDef: '刚从一个房间穿过房门走到另一个房间，大脑瞬间一片空白：等等，我过来要干嘛来着？',
+    description: '心理学称之为“事件边界（Event Boundary）”。人类大脑将生活经历按“章节”分块储存，当人穿过一扇物理门框或虚拟空间边界时，大脑认知系统会自动将前一个房间的短期记忆数据进行“归档清理”，为即将面对的新环境腾出注意力容量。',
+    memoryTriggers: [
+      '在卧室想拿个指甲刀，刚走到客厅突然愣在原地',
+      '大脑宕机：“我站在这儿是要干什么？”',
+      '退回到原来的房间往往一瞬间又想起来了'
+    ],
+    trivia: '不仅穿过真实的门会触发，甚至在电脑桌面关闭一个软件切换到另一个全屏软件时，也会触发数字世界的“虚拟门口效应”。',
+    keywords: ['进房间', '忘了干嘛', '突然忘了', '走到客厅', '换个房间', '忘事', '穿过门', '想不起干嘛', '走到哪忘了'],
+    alternatives: [
+      { name: '舌尖现象 (Tip of the Tongue)', reason: '知道答案却调用不出词汇，而门口效应是短时工作记忆的目标被重置。' },
+      { name: '健忘症 (Amnesia)', reason: '病理性的长期记忆缺失，门口效应是人人皆有的健康大脑生理归档机制。' }
+    ]
+  },
+  {
+    id: 'hypnic-jerk',
+    name: '入睡抽动',
+    pinyin: 'rù shuì chōu dòng',
+    foreignName: 'Hypnic Jerk (肌抽跃 / 临睡肌阵挛 / 跌落错觉)',
+    category: '心理与感官现象',
+    matchScore: 98,
+    oneSentenceDef: '刚躺下快要睡着时，身体突然无意识地剧烈一抖，伴随着一脚踩空或从悬崖坠落的惊悸感。',
+    description: '发生在入睡初期的“非快速眼动睡眠第1阶段”。此时全身骨骼肌开始松弛，呼吸心率放缓。如果白天过度疲劳或紧张，大脑运动皮层可能将这种突然的肌肉大面积放松误判为“身体正在失去平衡坠落悬崖”，于是紧急发送强烈的运动神经冲动让四肢猛缩自救。',
+    memoryTriggers: [
+      '快要入睡神志半清醒半模糊时',
+      '脑海里正好幻视出一脚踩空楼梯或滑倒跌落的画面',
+      '全身肌肉剧烈抽搐猛震一下，瞬间被吓醒'
+    ],
+    trivia: '演化心理学家认为这是灵长类动物在树上睡觉时保留下来的本能防御机制——防止我们的祖先在树枝上睡熟后不慎摔死。',
+    keywords: ['刚睡着', '抽搐', '抖一下', '踩空', '掉下悬崖', '抖动', '猛烈抽动', '睡觉抽筋', '一激灵', '入睡抖'],
+    alternatives: [
+      { name: '不宁腿综合征 (RLS)', reason: '休息时下肢产生不可抑制的酸胀麻木不适，必须活动缓解。' },
+      { name: '睡眠瘫痪 (Sleep Paralysis)', reason: '俗称鬼压床，意识完全清醒但全身骨骼肌无法动弹。' }
+    ]
+  },
+  {
+    id: 'phantom-vibration',
+    name: '幻震综合征',
+    pinyin: 'huàn zhèn zōng hé zhèng',
+    foreignName: 'Phantom Vibration Syndrome (手机幻听幻震)',
+    category: '心理与感官现象',
+    matchScore: 96,
+    oneSentenceDef: '总觉得兜里的手机在震动，掏出来一看却根本没有任何通知或来电。',
+    description: '现代人高度依赖即时通讯带来的神经应激状态。大脑将衣物摩擦、肌肉轻微抽搐等微弱的皮肤触觉信号，先入为主地错误放大解码为“手机震动”信号。神经学中称之为信号检测理论中的“虚报（False Alarm）”。',
+    memoryTriggers: [
+      '在走路或忙碌时，大腿裤兜皮肤隐约一阵发麻震动',
+      '条件反射般掏出手机解锁，屏幕一片安静没有任何消息',
+      '频繁发生，甚至在手机根本没放在身上时依然觉得大腿在抖'
+    ],
+    trivia: '调查显示超过 90% 的大学生和重度职场智能手机用户都定期经历过幻震综合征。',
+    keywords: ['手机震动', '错觉', '以为响了', '幻震', '震动幻觉', '兜里震动', '裤兜震动', '没消息以为震动'],
+    alternatives: [
+      { name: '错听铃声 (Phantom Ringing)', reason: '在洗澡水声或嘈杂环境中把噪音脑补成手机铃声的听觉幻象。' },
+      { name: '无手机焦虑症 (Nomophobia)', reason: '离开手机或电量不足时产生的深层焦虑心理。' }
+    ]
+  },
+  {
+    id: 'cute-aggression',
+    name: '可爱侵犯',
+    pinyin: 'kě ài qīn fàn',
+    foreignName: 'Cute Aggression (可爱侵略性 / 萌态攻击心理)',
+    category: '心理与感官现象',
+    matchScore: 97,
+    oneSentenceDef: '看到极度软萌的小动物或幼童时，内心除了喜欢，居然强烈想掐它脸、揉碎它甚至“咬上一口”。',
+    description: '耶鲁大学心理学团队研究证实，这是人类大脑的一种“二相情感调节（Dimorphous Expression）”。当面对极致的软萌刺激时，大脑奖赏中枢涌起的正向情绪过载，神经系统为了避免过度亢奋失控，会自动调动轻度的攻击侵略欲望来迅速平衡情绪过载，就像极度悲伤时破涕为笑一样。',
+    memoryTriggers: [
+      '捧起一团肉乎乎的刚满月小奶猫或小奶狗',
+      '一边疯狂感慨太可爱了，一边咬牙切齿想要把脸埋进去狠狠吸一口',
+      '伴随着双手握拳、想要用力捏一捏的身体反应'
+    ],
+    trivia: '菲律宾语中甚至有一个专属独立单词“Gigil”专门用来表达“因为某物实在太可爱而忍不住想要咬它一口”的冲动。',
+    keywords: ['可爱', '想捏', '想咬', '想捏死', '太可爱了', '忍不住掐', '软萌', '咬一口', '萌死我了'],
+    alternatives: [
+      { name: '幼态持续 (Neoteny)', reason: '生物学中对大眼睛、圆脸等婴儿特征的本能保护欲望。' },
+      { name: '斯德哥尔摩效应', reason: '被害者对施害者产生情感依赖，与可爱无心理关联。' }
+    ]
+  },
+  {
+    id: 'contagious-yawning',
+    name: '模仿性哈欠',
+    pinyin: 'mó fǎng xìng hā qiàn',
+    foreignName: 'Contagious Yawning (传染性打哈欠 / 镜像共情哈欠)',
+    category: '心理与感官现象',
+    matchScore: 99,
+    oneSentenceDef: '只要看到别人打哈欠，或者听到甚至脑子里读到“打哈欠”三个字，嘴巴就忍不住张大。',
+    description: '由大脑运动前区皮层的“镜像神经元系统（Mirror Neuron System）”驱动。这种模仿反应不仅不是困倦的标志，反而是高级社会性哺乳动物（如人类、猩猩、海豚和狗）进化出的“群体同步与情感共情”能力的极佳体现。',
+    memoryTriggers: [
+      '看到对面工位同事打了一个哈欠，3秒钟内自己也张开嘴',
+      '哪怕只是看小猫打哈欠的搞笑视频，喉咙也会涌起一阵深呼吸的冲动',
+      '此刻读到这段文字，你大概率正想打个哈欠'
+    ],
+    trivia: '心理学研究发现，一个人与打哈欠的人亲密程度越高（家人、恋人、好朋友），被传染打哈欠的速度就越快、概率就越高。',
+    keywords: ['打哈欠', '传染', '哈欠', '忍不住哈欠', '别人打哈欠', '看别人打哈欠', '想打哈欠', '哈欠传染'],
+    alternatives: [
+      { name: '换气过度 (Hyperventilation)', reason: '因呼吸急促过深导致体内二氧化碳分压失衡的生理病态。' },
+      { name: '叹气 (Sighing)', reason: '肺泡深层重新充气的本能呼吸复位动作。' }
+    ]
+  },
+  {
+    id: 'voice-confrontation',
+    name: '声音对抗',
+    pinyin: 'shēng yīn duì kàng',
+    foreignName: 'Voice Confrontation (听觉镜像排斥 / 录音失真感)',
+    category: '心理与感官现象',
+    matchScore: 97,
+    oneSentenceDef: '听微信语音或录音机里自己说话的声音，觉得又尖又怪、特别陌生难听。',
+    description: '人类平时听到自己说话时，声音是通过空气传导与颅骨内部“骨传导”同时传入内耳的，骨骼的共振过滤增强了低频共鸣，使你感觉自己的声音浑厚低沉。而录音设备只记录了纯粹的空气传导声，丢失了颅骨低音炮效果，导致你听到的真实声线与脑海里建立了一辈子的内在声像产生严重认知脱节。',
+    memoryTriggers: [
+      '在微信群里回放刚刚自己发出去的 10 秒语音',
+      '心中强烈羞耻：“天哪，我平时说话原来这么难听、声调这么怪吗？”',
+      '别人听了却觉得：“很正常啊，你平时就长这个声音”'
+    ],
+    trivia: '骨传导耳机的发明灵感正是来自音乐大师贝多芬在全聋时期用牙齿咬着一根木棍抵住钢琴听取共鸣的物理原理。',
+    keywords: ['自己的声音', '录音', '好难听', '不像我', '微信语音自己', '声音难听', '录音不像自己', '自己说话声音'],
+    alternatives: [
+      { name: '冒充者综合征 (Impostor syndrome)', reason: '能力出众却时刻怀疑自己是个冒牌骗子的心理状态。' },
+      { name: '多普勒效应 (Doppler Effect)', reason: '声源相对移动导致听觉频率升高或降低的物理声学效应。' }
+    ]
+  },
+  {
+    id: 'brain-freeze',
+    name: '蝶腭神经节痛',
+    pinyin: 'dié è shén jīng jié tòng',
+    foreignName: 'Brain Freeze (冰淇淋头痛 / 冰食性头痛)',
+    category: '自然与科学冷知识',
+    matchScore: 98,
+    oneSentenceDef: '大口猛吃冰淇淋或猛灌冰镇可乐时，太阳穴和额头深处传来的短促剧烈钻心刺痛。',
+    description: '当大量极度冰冷的食物突然接触口腔上颚时，上腭密集的毛细血管急剧痉挛收缩，随后迅速代偿性扩张充血。上腭的蝶腭神经节受到剧烈温差刺激，将疼痛电信号经由三叉神经直接上传至大脑，大脑误将这种来自口腔顶部的冷痛信号定位到了前额和太阳穴上。',
+    memoryTriggers: [
+      '夏天大口咬下一整块雪糕',
+      '后脑勺和太阳穴像被针猛扎一样，双手捂住头五官扭曲',
+      '痛感通常持续几十秒，用舌头顶住上颚能快速缓解'
+    ],
+    trivia: '缓解冰淇淋头痛的科学解药非常简单：立刻将温暖的舌头平贴紧压在上腭中央，迅速提高上腭血管温度即可在几秒内阻断痛觉。',
+    keywords: ['冰淇淋', '头痛', '吃冰', '脑壳疼', '大口吃冰', '脑仁疼', '吃冷饮头疼', '雪糕头疼'],
+    alternatives: [
+      { name: '偏头痛 (Migraine)', reason: '周期性神经血管功能紊乱导致的搏动性慢性头痛。' },
+      { name: '三叉神经痛', reason: '面部三叉神经分支分布区的骤发骤停闪电样剧痛。' }
+    ]
   }
 ];
 
@@ -611,25 +800,29 @@ const setStoredList = (key: string, value: any) => {
 
 // 实验室级反向寻词检索调用（支持 Serverless 代理与原生 Gemini 通道）
 async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
-  // 1. 优先请求同源 /api/lookup；如果在 GitHub Pages 等纯静态域，则无缝 fallback 到已部署的 Vercel 云代理
-  const endpoints = [
-    '/api/lookup',
-    'https://tip-of-my-tongue-five.vercel.app/api/lookup'
-  ];
+  // 1. 优先请求同源 /api/lookup；如果在 GitHub Pages 等纯静态域，则尝试 Vercel 生产代理云函数
+  const isVercel = typeof window !== 'undefined' && window.location.hostname.includes('vercel');
+  const endpoints = isVercel
+    ? ['/api/lookup']
+    : ['https://tip-of-my-tongue-five.vercel.app/api/lookup'];
 
   for (const endpoint of endpoints) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4500); // 4.5秒硬性超时，绝不死等
       const proxyRes = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: userQuery, category: categoryHint })
+        body: JSON.stringify({ query: userQuery, category: categoryHint }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
       if (proxyRes.ok) {
         const data = await proxyRes.json();
         if (data && data.primaryMatch) return data;
       }
     } catch (e) {
-      // 尝试下一个可用接口
+      // 超时或跨域网络受阻快速跳出
     }
   }
 
