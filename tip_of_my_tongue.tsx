@@ -820,8 +820,11 @@ async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
       if (proxyRes.ok) {
         const data = await proxyRes.json();
         if (data && data.primaryMatch) return data;
+      } else if (proxyRes.status === 401) {
+        throw new Error('KEY_EXPIRED');
       }
-    } catch (e) {
+    } catch (e: any) {
+      if (e?.message === 'KEY_EXPIRED') throw e;
       // 超时或跨域网络受阻快速跳出
     }
   }
@@ -1066,6 +1069,9 @@ export default function App() {
         throw new Error('Incomplete structure');
       }
     } catch (err: any) {
+      if (err?.message === 'KEY_EXPIRED') {
+        triggerToast('云端 AI 密钥已失效 (401)，已自动切换为内置词库');
+      }
       // 智能平滑命中精选知识库
       const fallback = findLocalFallback(trimmed);
       setCurrentResult(fallback);

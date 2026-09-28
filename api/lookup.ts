@@ -115,6 +115,14 @@ export default async function handler(req: any, res: any) {
           const cleaned = rawContent.replace(/```json/gi, '').replace(/```/g, '').trim();
           return res.status(200).json(JSON.parse(cleaned));
         }
+      } else {
+        const errData = await response.json().catch(() => ({}));
+        console.error('Backup AI provider error:', response.status, errData);
+        return res.status(response.status).json({
+          error: 'UPSTREAM_AI_ERROR',
+          status: response.status,
+          message: errData?.error?.message || 'Upstream provider authentication failed'
+        });
       }
     } catch (e: any) {
       console.error('Backup lookup failed:', e);
