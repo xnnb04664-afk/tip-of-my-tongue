@@ -1,0 +1,6 @@
+# Robots.txt for 话到嘴边 (Tip of My Tongue)
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://tip-of-my-tongue-five.vercel.app/sitemap.xml
