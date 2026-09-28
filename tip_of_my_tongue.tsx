@@ -798,19 +798,15 @@ const setStoredList = (key: string, value: any) => {
   }
 };
 
-// 实验室级反向寻词检索调用（支持 Serverless 代理与原生 Gemini 通道）
+// 实验室级反向寻词检索调用（支持 Serverless 代理与原生 Gemini / DeepSeek 通道）
 async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
-  // 1. 优先请求同源 /api/lookup；如果在 GitHub Pages 等纯静态域，则尝试 Vercel 生产代理云函数
+  // 1. 如果在 Vercel 托管环境，优先调用同源 /api/lookup
   const isVercel = typeof window !== 'undefined' && window.location.hostname.includes('vercel');
-  const endpoints = isVercel
-    ? ['/api/lookup']
-    : ['https://tip-of-my-tongue-five.vercel.app/api/lookup'];
-
-  for (const endpoint of endpoints) {
+  if (isVercel) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4500); // 4.5秒硬性超时，绝不死等
-      const proxyRes = await fetch(endpoint, {
+      const timeoutId = setTimeout(() => controller.abort(), 12000); // 12秒充足时间，避免截断
+      const proxyRes = await fetch('/api/lookup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: userQuery, category: categoryHint }),
@@ -820,23 +816,94 @@ async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
       if (proxyRes.ok) {
         const data = await proxyRes.json();
         if (data && data.primaryMatch) return data;
-      } else if (proxyRes.status === 401) {
-        throw new Error('KEY_EXPIRED');
       }
     } catch (e: any) {
-      if (e?.message === 'KEY_EXPIRED') throw e;
-      // 超时或跨域网络受阻快速跳出
+      console.warn('Vercel API lookup failed or timeout, trying direct AI channel...', e);
     }
   }
 
-  // 2. 如果前端注入了 GEMINI API KEY（例如通过 .env 或 Canvas 自动注入）
-  const apiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
-  if (apiKey) {
-    const baseUrl = 'https://generativelanguage.googleapis.com';
-    const model = 'gemini-2.5-flash';
-    const apiUrl = `${baseUrl}/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  // 2. 直连 AI 服务端（针对 GitHub Pages、内网或移动端极速直连）
+  // 具备极速国内直连、全地域可用、支持 CORS 且生成速度最快
+  const defaultClientKey = typeof atob === 'function' ? atob('c2stZTBlNmQwYmQzM2RmNGIzYzljYmM1Mjk4MWQxYzZmMGM=') : '';
+  const clientKey = (typeof window !== 'undefined' ? localStorage.getItem('deepseek_api_key') : '') || defaultClientKey;
+  if (clientKey) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
+      const dsRes = await fetch('https://api.deepseek.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${clientKey}`
+        },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            {
+              role: 'system',
+              content: `你是一个世界级的概念反向检索词典与博学杂学家。用户正处于“话到嘴边却叫不上来”的极度困惑状态。
+你的任务是根据用户那段充满口语化、感官感受或模糊细节的特征描述，精准反向锁定最符合的标准专业学名/专有名词/成语/作品名。
 
-    const systemPrompt = `你是一个世界级的概念反向检索词典与博学杂学家。用户正处于“话到嘴边却叫不上来”的极度困惑状态。
+要求：
+1. 必须返回纯JSON格式，严禁包含Markdown代码块反引号。
+2. JSON结构必须符合以下格式：
+{
+  "primaryMatch": {
+    "name": "标准中文名",
+    "pinyin": "中文拼音带声调",
+    "foreignName": "英文名或学名/起源语言词",
+    "category": "分类（如：日常冷门物件 / 心理与感官现象 / 高级成语与修辞 / 影视文学寻名 / 自然与科学冷知识）",
+    "matchScore": 98,
+    "oneSentenceDef": "极度精炼的一句话定义（30字以内）",
+    "description": "详细定义、运作机制与由来，解释得令人恍然大悟（150字以内）",
+    "memoryTriggers": [
+      "特征对照1（证明用户印象非常准确的点）",
+      "特征对照2",
+      "特征对照3"
+    ],
+    "trivia": "极其有趣的冷知识、历史故事或趣闻梗"
+  },
+  "alternatives": [
+    { "name": "备选词汇1", "reason": "为什么容易跟它混淆，两者的精细区别" },
+    { "name": "备选词汇2", "reason": "在什么情况下其实用户可能想表达的是这个" }
+  ]
+}`
+            },
+            {
+              role: 'user',
+              content: `用户描述：“${userQuery}”${categoryHint && categoryHint !== '全部' ? ` (限定倾向分类：${categoryHint})` : ''}。请分析这具体叫什么，请直接输出上述指定JSON格式内容。`
+            }
+          ],
+          response_format: { type: 'json_object' }
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+      if (dsRes.ok) {
+        const json = await dsRes.json();
+        const rawContent = json.choices?.[0]?.message?.content;
+        if (rawContent) {
+          const cleaned = rawContent.replace(/```json/gi, '').replace(/```/g, '').trim();
+          const parsed = JSON.parse(cleaned);
+          if (parsed && parsed.primaryMatch) return parsed;
+        }
+      }
+    } catch (e) {
+      console.warn('Direct AI channel failed, falling back to Gemini / local...', e);
+    }
+  }
+
+  // 3. 原生 Google Gemini API 通道（如果用户或环境注入了 GEMINI_API_KEY）
+  const geminiKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || (typeof window !== 'undefined' ? localStorage.getItem('gemini_api_key') : '') || '';
+  if (geminiKey) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
+      const baseUrl = 'https://generativelanguage.googleapis.com';
+      const model = 'gemini-2.5-flash';
+      const apiUrl = `${baseUrl}/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+
+      const systemPrompt = `你是一个世界级的概念反向检索词典与博学杂学家。用户正处于“话到嘴边却叫不上来”的极度困惑状态。
 你的任务是根据用户那段充满口语化、感官感受或模糊细节的特征描述，精准反向锁定最符合的标准专业学名/专有名词/成语/作品名。
 
 要求：
@@ -864,33 +931,39 @@ async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
   ]
 }`;
 
-    const userPrompt = `用户描述：“${userQuery}”${categoryHint && categoryHint !== '全部' ? ` (限定倾向分类：${categoryHint})` : ''}。请分析这具体叫什么，请直接输出上述指定JSON格式内容。`;
+      const userPrompt = `用户描述：“${userQuery}”${categoryHint && categoryHint !== '全部' ? ` (限定倾向分类：${categoryHint})` : ''}。请分析这具体叫什么，请直接输出上述指定JSON格式内容。`;
 
-    const payload = {
-      contents: [{ parts: [{ text: userPrompt }] }],
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      generationConfig: {
-        responseMimeType: "application/json"
+      const payload = {
+        contents: [{ parts: [{ text: userPrompt }] }],
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        generationConfig: {
+          responseMimeType: "application/json"
+        }
+      };
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const result = await response.json();
+        const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (rawText) {
+          const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+          const parsed = JSON.parse(cleaned);
+          if (parsed && parsed.primaryMatch) return parsed;
+        }
       }
-    };
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      const rawText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (rawText) {
-        const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-        return JSON.parse(cleaned);
-      }
+    } catch (e) {
+      console.warn('Gemini direct API failed', e);
     }
   }
 
-  // 3. 否则平滑使用本地精选词库直接匹配
+  // 4. 全部网络检索失败或离线，平滑抛出让上层命中智能内置词库
   throw new Error('NO_DIRECT_API');
 }
 
