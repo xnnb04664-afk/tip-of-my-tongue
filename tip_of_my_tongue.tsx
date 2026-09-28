@@ -611,19 +611,26 @@ const setStoredList = (key: string, value: any) => {
 
 // 实验室级反向寻词检索调用（支持 Serverless 代理与原生 Gemini 通道）
 async function callGeminiReverseLookup(userQuery: string, categoryHint = '') {
-  // 1. 如果部署在支持 Serverless 后端的平台 (例如 Vercel)，优先请求静默代理
-  try {
-    const proxyRes = await fetch('/api/lookup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: userQuery, category: categoryHint })
-    });
-    if (proxyRes.ok) {
-      const data = await proxyRes.json();
-      if (data && data.primaryMatch) return data;
+  // 1. 优先请求同源 /api/lookup；如果在 GitHub Pages 等纯静态域，则无缝 fallback 到已部署的 Vercel 云代理
+  const endpoints = [
+    '/api/lookup',
+    'https://tip-of-my-tongue-five.vercel.app/api/lookup'
+  ];
+
+  for (const endpoint of endpoints) {
+    try {
+      const proxyRes = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: userQuery, category: categoryHint })
+      });
+      if (proxyRes.ok) {
+        const data = await proxyRes.json();
+        if (data && data.primaryMatch) return data;
+      }
+    } catch (e) {
+      // 尝试下一个可用接口
     }
-  } catch (e) {
-    // 纯静态环境继续尝试
   }
 
   // 2. 如果前端注入了 GEMINI API KEY（例如通过 .env 或 Canvas 自动注入）
